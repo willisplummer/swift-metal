@@ -11,6 +11,8 @@
 		370BFFAC2A7E2715002DEB6B /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 370BFFAB2A7E2715002DEB6B /* ContentView.swift */; };
 		370BFFAE2A7E2715002DEB6B /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 370BFFAD2A7E2715002DEB6B /* Assets.xcassets */; };
 		370BFFB12A7E2715002DEB6B /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 370BFFB02A7E2715002DEB6B /* Preview Assets.xcassets */; };
+		370BFFB82A7E297B002DEB6B /* Renderer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 370BFFB72A7E297B002DEB6B /* Renderer.swift */; };
+		370BFFBB2A7E3397002DEB6B /* Shaders.metal in Sources */ = {isa = PBXBuildFile; fileRef = 370BFFBA2A7E3397002DEB6B /* Shaders.metal */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -19,6 +21,9 @@
 		370BFFAB2A7E2715002DEB6B /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
 		370BFFAD2A7E2715002DEB6B /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		370BFFB02A7E2715002DEB6B /* Preview Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = "Preview Assets.xcassets"; sourceTree = "<group>"; };
+		370BFFB72A7E297B002DEB6B /* Renderer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Renderer.swift; sourceTree = "<group>"; };
+		370BFFBA2A7E3397002DEB6B /* Shaders.metal */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.metal; path = Shaders.metal; sourceTree = "<group>"; };
+		3731FF102A7ECD2D00877B59 /* Definitions.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Definitions.h; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -53,6 +58,9 @@
 			children = (
 				370BFFA92A7E2715002DEB6B /* wenderlickmetalApp.swift */,
 				370BFFAB2A7E2715002DEB6B /* ContentView.swift */,
+				370BFFB72A7E297B002DEB6B /* Renderer.swift */,
+				370BFFBA2A7E3397002DEB6B /* Shaders.metal */,
+				3731FF102A7ECD2D00877B59 /* Definitions.h */,
 				370BFFAD2A7E2715002DEB6B /* Assets.xcassets */,
 				370BFFAF2A7E2715002DEB6B /* Preview Content */,
 			);
@@ -137,7 +145,9 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				370BFFBB2A7E3397002DEB6B /* Shaders.metal in Sources */,
 				370BFFAC2A7E2715002DEB6B /* ContentView.swift in Sources */,
+				370BFFB82A7E297B002DEB6B /* Renderer.swift in Sources */,
 				370BFFAA2A7E2715002DEB6B /* wenderlickmetalApp.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -283,6 +293,7 @@
 				PRODUCT_BUNDLE_IDENTIFIER = willisplummer.wenderlickmetal;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_OBJC_BRIDGING_HEADER = wenderlickmetal/Definitions.h;
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
 			};
@@ -312,6 +323,7 @@
 				PRODUCT_BUNDLE_IDENTIFIER = willisplummer.wenderlickmetal;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_OBJC_BRIDGING_HEADER = wenderlickmetal/Definitions.h;
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
 			};
