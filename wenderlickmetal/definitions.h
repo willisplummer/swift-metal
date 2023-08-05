@@ -8,9 +8,10 @@
 #ifndef Definitions_h
 #define Definitions_h
 
+// i think this is c++ code
 struct Constants
 {
-    float moveBy;
+    float animateBy;
 };
 
 #endif /* Definitions_h */

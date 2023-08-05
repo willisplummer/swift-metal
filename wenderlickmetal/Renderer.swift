@@ -15,7 +15,10 @@ class Renderer: NSObject, MTKViewDelegate {
     let pipelineState: MTLRenderPipelineState
     let vertexBuffer: MTLBuffer
     let indexBuffer: MTLBuffer
+    let vertices: [Float]
     let indices: [UInt16]
+    var time: Float = 0
+    var constants: Constants
 
     init(_ parent: ContentView) {
         self.parent = parent
@@ -36,17 +39,7 @@ class Renderer: NSObject, MTKViewDelegate {
             fatalError()
         }
 
-//        before i had the indexbuffer
-//        let vertices: [Float] = [
-//            0, 1, 0,
-//            -1, -1, 0,
-//            1, -1, 0,
-//            -1, 1, 1,
-//            1, 1, 1,
-//            -1, -1, 1,
-//            1, -1, 1,
-//        ]
-        let vertices: [Float] = [
+        self.vertices = [
             -1, 1, 0,
             1, 1, 0,
             -1, -1, 0,
@@ -57,9 +50,11 @@ class Renderer: NSObject, MTKViewDelegate {
         indices = [
             0, 1, 2, // left half of triangle strip
             1, 2, 3, // right half of triangle strip
-            2, 3, 4, // middle triangle
+//            2, 3, 4, // middle triangle
         ]
         
+        self.constants = Constants(animateBy: 0.0)
+
         self.vertexBuffer = metalDevice.makeBuffer(bytes: vertices, length: vertices.count * MemoryLayout<Float>.stride, options: [])!
         self.indexBuffer = metalDevice.makeBuffer(bytes: indices, length: indices.count * MemoryLayout<UInt16>.stride, options: [])!
         super.init()
@@ -78,15 +73,19 @@ class Renderer: NSObject, MTKViewDelegate {
 
         let renderPassDescriptor = view.currentRenderPassDescriptor
 
-        var constants = Constants()
-        constants.moveBy = 0.5
+        // assumes we're actually achieving 60fps
+        time += 1 / Float(view.preferredFramesPerSecond)
+
+        let animateBy: Float = abs(sin(time)/2 + 0.1)
+        print(animateBy)
+        constants.animateBy = animateBy
 
         // this will be the background color
         renderPassDescriptor?.colorAttachments[0].clearColor = MTLClearColorMake(0, 0, 0, 1.0)
         renderPassDescriptor?.colorAttachments[0].loadAction = .clear
         renderPassDescriptor?.colorAttachments[0].storeAction = .store
 
-        let  commandEncoder = commandBuffer?.makeRenderCommandEncoder(descriptor: renderPassDescriptor!)
+        let commandEncoder = commandBuffer?.makeRenderCommandEncoder(descriptor: renderPassDescriptor!)
 
         commandEncoder?.setRenderPipelineState(pipelineState)
         commandEncoder?.setVertexBuffer(vertexBuffer, offset: 0, index: 0)
