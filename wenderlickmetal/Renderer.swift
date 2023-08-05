@@ -6,6 +6,7 @@
 //
 
 import MetalKit
+import simd
 
 class Renderer: NSObject, MTKViewDelegate {
 
@@ -15,7 +16,7 @@ class Renderer: NSObject, MTKViewDelegate {
     let pipelineState: MTLRenderPipelineState
     let vertexBuffer: MTLBuffer
     let indexBuffer: MTLBuffer
-    let vertices: [Float]
+    let vertices: [Vertex]
     let indices: [UInt16]
     var time: Float = 0
     var constants: Constants
@@ -32,6 +33,21 @@ class Renderer: NSObject, MTKViewDelegate {
         pipelineDescriptor.vertexFunction = library?.makeFunction(name: "vertex_shader")
         pipelineDescriptor.fragmentFunction = library?.makeFunction(name: "fragment_shader")
         pipelineDescriptor.colorAttachments[0].pixelFormat = .bgra8Unorm
+
+        // setup the vertexStruct
+        let vertexDescriptor = MTLVertexDescriptor()
+        vertexDescriptor.attributes[0].format = .float3
+        vertexDescriptor.attributes[0].offset = 0
+        vertexDescriptor.attributes[0].bufferIndex = 0
+
+        vertexDescriptor.attributes[1].format = .float4
+        // offset here refers to the size of the previous attribute (so its a float3)
+        vertexDescriptor.attributes[1].offset = MemoryLayout<SIMD3<Float>>.stride
+        vertexDescriptor.attributes[1].bufferIndex = 0
+
+        vertexDescriptor.layouts[0].stride = MemoryLayout<Vertex>.stride
+        
+        pipelineDescriptor.vertexDescriptor = vertexDescriptor
         
         do {
             try pipelineState = metalDevice.makeRenderPipelineState(descriptor: pipelineDescriptor)
@@ -40,22 +56,20 @@ class Renderer: NSObject, MTKViewDelegate {
         }
 
         self.vertices = [
-            -1, 1, 0,
-            1, 1, 0,
-            -1, -1, 0,
-            1, -1, 0,
-            0, 1, 0,
+            Vertex(position: [-1, 1, 0], color: [1,0,0,1]),
+            Vertex(position: [1, 1, 0], color: [0,1,0,1]),
+            Vertex(position: [-1, -1, 0], color: [0,0,1,1]),
+            Vertex(position: [1, -1, 0], color: [1,0,1,1]),
         ]
 
         indices = [
             0, 1, 2, // left half of triangle strip
             1, 2, 3, // right half of triangle strip
-//            2, 3, 4, // middle triangle
         ]
         
         self.constants = Constants(animateBy: 0.0)
 
-        self.vertexBuffer = metalDevice.makeBuffer(bytes: vertices, length: vertices.count * MemoryLayout<Float>.stride, options: [])!
+        self.vertexBuffer = metalDevice.makeBuffer(bytes: vertices, length: vertices.count * MemoryLayout<Vertex>.stride, options: [])!
         self.indexBuffer = metalDevice.makeBuffer(bytes: indices, length: indices.count * MemoryLayout<UInt16>.stride, options: [])!
         super.init()
     }
@@ -77,7 +91,6 @@ class Renderer: NSObject, MTKViewDelegate {
         time += 1 / Float(view.preferredFramesPerSecond)
 
         let animateBy: Float = abs(sin(time)/2 + 0.1)
-        print(animateBy)
         constants.animateBy = animateBy
 
         // this will be the background color
